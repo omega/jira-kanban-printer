@@ -1,0 +1,35 @@
+h1. JIRA Print Server
+
+We had an urge to start trying KANBAN at the office. We use JIRA for all
+issue-tracking, but we wanted a physical board, so we needed a way to print our
+cards from JIRA.
+
+The solution was this over-engineered pile of crap, with a massive amounts of
+components:
+
+* A Groovy script to plug into JIRA
+** This depends on the GroovyRunner plugin for JIRA
+* A Mojolicious::Lite web-server to recieve commands from the Groovy script
+* A ZeroMQ PUB-SUB from the web service to a PDFifier
+** Cause we don't want the webserver to block, waiting for PDF production
+* The PDFifier uses LaTeX to produce a PDF of an issue.
+** Not only that, it produces two identical pages!
+* The PDF gets moved to a queue
+* We have an AnyEvent-based daemon watching that directory
+** When files are created, it will print using CUPS and remove the PDF
+
+h2. Other stuff
+
+h3. misc/
+
+In the misc-directory, two of the examples from the Net::CUPS-distro is included, to
+aid in any debugging that might be required
+
+h3. tex/
+
+This is the compiled/unpacked verion of the foils package for tex, which I got inspired to use
+from this:
+
+http://cs.acadiau.ca/~jdiamond/tex-reference-material/FancyPresentations.pdf
+
+
