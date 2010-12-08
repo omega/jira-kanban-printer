@@ -54,7 +54,13 @@ while(1) {
 
 log.error(text)
 
-// Figure out how to do HTTP requests
 
+// Add a KANBAN label to the issue
+
+ComponentManager componentManager = ComponentManager.getInstance();
+User remoteUser = componentManager.getJiraAuthenticationContext().getUser();
+
+Set<Label> labels = issue.getLabels();
+Label kanban = new Label(issue);
 
 
