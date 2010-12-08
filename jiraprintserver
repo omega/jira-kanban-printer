@@ -30,7 +30,6 @@ get '/print' => sub {
     $self->app->log->debug("tex: " . $tex);
     $sock->send($tex) or $self->app->log->error("Could not comunicate to 0MQ socket");
     $self->render(text => 'ISSUE PRINTED (' . $issue . ")\n");
-    $self->app->log->debug("result: " . $self->res->body);
 };
 app->start;
 
