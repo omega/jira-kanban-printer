@@ -1,0 +1,93 @@
+% Layout definitions for PDF presentation slides.
+% Kristjan Kannike.
+% Created: 22.08.2004.
+% Changed: 22.08.2004.
+
+\ProvidesPackage{slidedesign}
+\LogoOff % Do not show the FoilTeX logo.
+\rightfooter{} % No page numbers.
+\raggedright % Ragged right text.
+
+% PostScript T1 fonts that look good in PDF.
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+
+\usepackage[english]{babel}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LISTS
+
+%Redefine symbols for bulleted lists.
+\renewcommand{\labelitemi}{\textcolor{red}{$\bullet$}} % Red bullet.
+\renewcommand{\labelitemii}{\textcolor{yellow}{$\star$}} % Yellow star.
+
+% Redefine the 1st, 2nd, and 3rd level marks in numbered lists.
+\renewcommand{\theenumi}{\arabic{enumi}} % Arabic numerals.
+\renewcommand{\theenumii}{\alph{enumii}} % Lower case letters. \Alph{} --- Capital letters.
+\renewcommand{\theenumiii}{\roman{enumiii}} % Lower case Roman numerals.
+% \Roman{} --- Capital Roman numerals.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COLOUR & FIGURES
+
+\usepackage{xcolor} % Colour for figures and text.
+
+\usepackage{graphicx} % Picture files, scaling & rotating pictures, coloured text.
+% For DVI and PostScript output (or for PDF output via PostScript) EPS-, and MPS-files are suitable;
+% but for direct production of PDF from LaTeX source with pdflatex, PNG-, JPG-, and MPS-files are suited.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \usepackage{esdiff} % Derivatives.
+\usepackage{amsmath} % More mathematical symbols and features for equation layout.
+
+% Define new colours for PDF hyperlinks.
+\xdefinecolor{linkc}{RGB}{33,0,99} % The colour for in-document links (e.g. in the table of contents).
+\xdefinecolor{citec}{RGB}{33,0,99} % The colour for bibliographic citations.
+\xdefinecolor{urlc}{RGB}{33,0,99} % The colour for hyperlinks to the Net.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PACKAGES FOR PDF POST-PROCESSING WITH PPOWER4
+
+\usepackage{pause} % Slide transitions.
+\usepackage{background} % Coloured or gradient background.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PDF HYPERLINKS.
+% The hyperref package has to be called last,
+% as it redefines a number of commands.
+\usepackage[%
+pdfauthor={Kristjan Kannike}, pdftitle={LaTeX slides}, % The PDF author and title.
+colorlinks=true, % Links are marked as coloured text, not coloured box.
+linkcolor=linkc, % The colour for in-document links (e.g. in the table of contents).
+citecolor = citec, % The colour for bibliographic citations.
+urlcolor=urlc, % The colour for hyperlinks to the Net.
+pdfpagelayout=SinglePage, % Scrolling by page as it is suitable for slides.
+pdfstartview=FitV, % Fit the document to window height.
+pdfview=FitV, % Fit any view of the document opened from a link to window width.
+pdfpagemode=FullScreen % Open the document on full screen.
+]{hyperref}
+
+% Commands for slide transitions for hyperref.
+% Thanks to Marc van Dongen <dongen@cs.ucc.ie>.
+\newcommand{\pagetransition}[1]{\hypersetup{pdfpagetransition={#1}}}
+\newcommand{\HOSplit}[0]{\pagetransition{Split /Dm /H /M /O}}
+\newcommand{\HISplit}[0]{\pagetransition{Split /Dm /H /M /I}}
+\newcommand{\VOSplit}[0]{\pagetransition{Split /Dm /V /M /O}}
+\newcommand{\VISplit}[0]{\pagetransition{Split /Dm /V /M /I}}
+\newcommand{\HBlinds}[0]{\pagetransition{Blinds /Dm /H}}
+\newcommand{\VBlinds}[0]{\pagetransition{Blinds /Dm /V}}
+\newcommand{\OBox}[0]{\pagetransition{Box /M /O}}
+\newcommand{\IBox}[0]{\pagetransition{Box /M /I}}
+% argument must be number from 0 to 360.
+\newcommand{\Wipe}[1]{\pagetransition{Wipe /Di #1}}
+\newcommand{\Dissolve}[0]{\pagetransition{Dissolve}}
+% argument must be number 0, 270 or 315.
+\newcommand{\pageTransitionGlitter}[1]{\pagetransition{Glitter /Di #1}}
+\newcommand{\Replace}[0]{\pagetransition{Replace}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% NEW COMMANDS
+
+\providecommand{\LyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\@} % The name LyX.

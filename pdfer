@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use ZeroMQ qw(ZMQ_SUB ZMQ_SUBSCRIBE);
+use File::Temp qw(tempfile);
+use File::Basename;
+use File::Copy;
+
+$ENV{TEXINPUTS} = ".:tex/:/usr/local/texlive/2010basic//";
+
+my ($host, $port);
+
+$host ||= '127.0.0.1';
+$port ||= 5566;
+
+my $ctxt = ZeroMQ::Context->new();
+my $sock = $ctxt->socket(ZMQ_SUB);
+$sock->connect( "tcp://$host:$port" );
+$sock->setsockopt(ZMQ_SUBSCRIBE, "");
+
+while (1) {
+    my $m = $sock->recv;
+    unless ($m) {
+        warn "Error recieving!";
+        next;
+    }
+    my $message = $m->data;
+    print "Got a request, yay\n";
+    warn $message;
+    my ($fh, $file) = tempfile( DIR => 'out', SUFFIX => '.tex', OPEN => 1 );
+    print $fh "$message";
+    close $fh;
+
+    # Now to call latex etc.
+    my $cmd = "TEXINPUTS=$ENV{TEXINPUTS} pdflatex -interaction=batchmode -output-directory=out $file";
+    warn "running: $cmd";
+    my $tex_out = `$cmd`;
+    my $base = basename($file, qw(.tex));
+    if (! -f  "out/$base.pdf" or $?) {
+        warn "Error generating PDF: $? $tex_out";
+        next;
+    }
+    my @trash = ("out/$base.tex", "out/$base.log", "out/$base.aux");
+    unlink @trash or warn "Error cleaning up @trash: $!";
+
+    move("out/$base.pdf", "queue/");
+}
+

@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use AnyEvent;
+use AnyEvent::Strict;
+use AnyEvent::Filesys::Notify;
+
+use Net::CUPS;
+use Net::CUPS::Destination;
+
+my $dest = Net::CUPS->new()->getDestination();
+$dest->addOption('landscape', 'on');
+$dest->addOption('sides', 'two-sided-short-edge');
+$dest->addOption('fit-to-page', 'on');
+
+my $cv = AnyEvent->condvar;
+
+# XXX: This will _NOT_ spool on startup!!
+my $notifier = AnyEvent::Filesys::Notify->new(
+    dirs     => [ qw( queue ) ],
+    interval => 2.0,
+    filter   => sub { shift =~ /\.(pdf)$/ },
+    cb       => sub {
+        my (@events) = @_;
+        # ... process @events ...
+        for my $e (@events) {
+            # Skip deleted and modified
+            warn $e->type . "  ::: " . $e->path;
+            next unless $e->is_created;
+
+            # Print it
+            # XXX: This should be async ideally, since we are in an event loop
+            warn "  -- >> Printing";
+            $dest->printFile($e->path, "Printing file from queue");
+
+            # remove it!
+            unlink($e->path);
+        }
+    },
+);
+
+$cv->recv;
