@@ -8,7 +8,10 @@ The solution was this over-engineered pile of crap, with a massive amounts of
 components:
 
 * A Groovy script to plug into JIRA
-** This depends on the GroovyRunner plugin for JIRA
+** This depends on the ScriptRunner plugin for JIRA
+*** https://plugins.atlassian.com/plugin/details/6820
+** This needs to be added to a transaction that basically just goes from and to the
+same step! (Call it Print kanban card)
 * A Mojolicious::Lite web-server to recieve commands from the Groovy script
 * A ZeroMQ PUB-SUB from the web service to a PDFifier
 ** Cause we don't want the webserver to block, waiting for PDF production
@@ -31,5 +34,13 @@ This is the compiled/unpacked verion of the foils package for tex, which I got i
 from this:
 
 http://cs.acadiau.ca/~jdiamond/tex-reference-material/FancyPresentations.pdf
+
+h3. Resources
+
+h4. ØMQ-introductions
+
+* http://nichol.as/zeromq-an-introduction
+* http://mitkokostov.info/post/1151080898/zeromq-messaging-patterns
+* Long: http://zguide.zeromq.org/chapter:all
 
 
