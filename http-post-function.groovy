@@ -5,7 +5,8 @@ import com.atlassian.jira.issue.Issue;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.*;
-
+import com.atlassian.jira.issue.label.LabelManager
+import com.opensymphony.user.User
 
 log = Category.getInstance("com.onresolve.jira.groovy.example.SendEmailOnBlocker")
 
@@ -58,9 +59,9 @@ log.error(text)
 // Add a KANBAN label to the issue
 
 ComponentManager componentManager = ComponentManager.getInstance();
+LabelManager lm = componentManager.getComponent(LabelManager.class)
 User remoteUser = componentManager.getJiraAuthenticationContext().getUser();
 
-Set<Label> labels = issue.getLabels();
-Label kanban = new Label(issue);
-
+// XXX: Should perhaps check for existance before adding?
+lm.addLabel(remoteUser, issue.getId(),"kanban", false)
 
