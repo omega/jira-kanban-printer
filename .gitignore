@@ -1,2 +1,4 @@
 out/*
+!out/.gitignore
 queue/*
+!queue/.gitignore
