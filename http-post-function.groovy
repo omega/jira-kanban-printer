@@ -3,7 +3,8 @@ import com.atlassian.jira.issue.Issue
 import org.apache.log4j.Category
 import com.atlassian.jira.issue.Issue;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URL
+import java.net.URLEncoder
 import java.io.*;
 import com.atlassian.jira.issue.label.LabelManager
 import com.opensymphony.user.User
@@ -16,7 +17,9 @@ log.error("Testing");
 Issue issue  = issue
 
 log.error("Issue: " + issue.getKey());
-URL url = new URL("http://localhost:6230/print?issue=" + issue.getKey() );
+URL url = new URL("http://localhost:6230/print?issue=" + issue.getKey()
+    + "&summary=" +  URLEncoder.encode(issue.getSummary(), "UTF-8")
+);
 HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 httpCon.connect();
 log.error("Connected");

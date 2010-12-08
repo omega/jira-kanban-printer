@@ -24,7 +24,7 @@ get '/print' => sub {
 
     $self->app->log->debug("OMG!! wanna print $issue");
     $self->stash(key => $issue);
-    $self->stash(summary => $self->param('summary'));
+    $self->stash(summary => $self->param('summary') || '');
     my $tex = $self->render_partial('print', format => 'tex');
 
     $self->app->log->debug("tex: " . $tex);
