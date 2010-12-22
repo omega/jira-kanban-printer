@@ -8,7 +8,7 @@ use File::Temp qw(tempfile);
 use File::Basename;
 use File::Copy;
 
-$ENV{TEXINPUTS} = ".:tex/:/usr/local/texlive/2010basic//";
+$ENV{TEXINPUTS} = ".:tex/:/usr/local/texlive/2010basic/:";
 
 my $Q = Directory::Queue->new(path => 'tex-queue', schema => { tex => 'string' });
 
