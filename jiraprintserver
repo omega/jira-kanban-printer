@@ -1,15 +1,10 @@
 #!/usr/bin/env perl
 
 use Mojolicious::Lite;
-use ZeroMQ qw(ZMQ_PUB ZMQ_REQ);
 
-my ($host, $port);
-$host ||= '127.0.0.1';
-$port ||= 5566;
+use Directory::Queue;
+my $Q = Directory::Queue->new(path => 'tex-queue', schema => { tex => 'string' });
 
-my $ctxt = ZeroMQ::Context->new();
-my $sock = $ctxt->socket(ZMQ_PUB) or die "Error in socket aqusision";
-$sock->bind( "tcp://$host:$port" );
 sub startup {
     my $self = shift;
     $self->types->type(tex => 'text/tex');
@@ -28,7 +23,7 @@ get '/print' => sub {
     my $tex = $self->render_partial('print', format => 'tex');
 
     $self->app->log->debug("tex: " . $tex);
-    $sock->send($tex) or $self->app->log->error("Could not comunicate to 0MQ socket");
+    $Q->add(tex=> "$tex") or $self->app->log->error("Could not comunicate to 0MQ socket");
     $self->render(text => 'ISSUE PRINTED (' . $issue . ")\n");
 };
 app->start;

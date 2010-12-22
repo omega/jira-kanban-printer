@@ -2,31 +2,27 @@
 
 use strict;
 use warnings;
+use Directory::Queue;
 
-use ZeroMQ qw(ZMQ_SUB ZMQ_SUBSCRIBE);
 use File::Temp qw(tempfile);
 use File::Basename;
 use File::Copy;
 
 $ENV{TEXINPUTS} = ".:tex/:/usr/local/texlive/2010basic//";
 
-my ($host, $port);
-
-$host ||= '127.0.0.1';
-$port ||= 5566;
-
-my $ctxt = ZeroMQ::Context->new();
-my $sock = $ctxt->socket(ZMQ_SUB);
-$sock->connect( "tcp://$host:$port" );
-$sock->setsockopt(ZMQ_SUBSCRIBE, "");
+my $Q = Directory::Queue->new(path => 'tex-queue', schema => { tex => 'string' });
 
 while (1) {
-    my $m = $sock->recv;
+    my $m = $Q->next || $Q->first;
     unless ($m) {
-        warn "Error recieving!";
+        sleep 1; # lets not busy lock!
         next;
     }
-    my $message = $m->data;
+    warn "got M: $m";
+    next unless $Q->lock($m);
+    my %message = $Q->get($m);
+    my $message = $message{tex};
+    $Q->remove($m);
     print "Got a request, yay\n";
     warn $message;
     my ($fh, $file) = tempfile( DIR => 'out', SUFFIX => '.tex', OPEN => 1 );
@@ -41,10 +37,13 @@ while (1) {
     if (! -f  "out/$base.pdf" or $?) {
         warn "Error generating PDF: $? $tex_out";
         next;
+    } else {
+        warn "Produced PDF: out/$base.pdf";
     }
     my @trash = ("out/$base.tex", "out/$base.log", "out/$base.aux");
     unlink @trash or warn "Error cleaning up @trash: $!";
 
     move("out/$base.pdf", "queue/");
+
 }
 
