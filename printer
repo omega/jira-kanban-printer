@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-use AnyEvent;
-use AnyEvent::Strict;
-use AnyEvent::Filesys::Notify;
+use Directory::Queue;
 
 use Net::CUPS;
 use Net::CUPS::Destination;
@@ -15,30 +13,21 @@ $dest->addOption('landscape', 'on');
 $dest->addOption('sides', 'two-sided-short-edge');
 $dest->addOption('fit-to-page', 'on');
 
-my $cv = AnyEvent->condvar;
+my $O = Directory::Queue->new(path => 'queue', schema => { path => 'string'});
 
-# XXX: This will _NOT_ spool on startup!!
-my $notifier = AnyEvent::Filesys::Notify->new(
-    dirs     => [ qw( queue ) ],
-    interval => 2.0,
-    filter   => sub { shift =~ /\.(pdf)$/ },
-    cb       => sub {
-        my (@events) = @_;
-        # ... process @events ...
-        for my $e (@events) {
-            # Skip deleted and modified
-            warn $e->type . "  ::: " . $e->path;
-            next unless $e->is_created;
+while (1) {
+    my $e = $O->next || $O->first;
+    unless ($e) {
+        sleep 1;
+        next;
+    }
+    my %e = $O->get($e);
 
-            # Print it
-            # XXX: This should be async ideally, since we are in an event loop
-            warn "  -- >> Printing";
-            $dest->printFile($e->path, "Printing file from queue");
+    # Print it
+    # XXX: This should be async ideally, since we are in an event loop
+    warn "  -- >> Printing";
+    $dest->printFile($e{path}, "Printing file from queue");
 
-            # remove it!
-            unlink($e->path);
-        }
-    },
-);
-
-$cv->recv;
+    # remove it!
+    unlink($e{path}) or warn "error unlinking: $e";
+}

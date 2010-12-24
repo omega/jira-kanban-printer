@@ -11,6 +11,7 @@ use File::Copy;
 $ENV{TEXINPUTS} = ".:tex/:/usr/local/texlive/2010basic/:";
 
 my $Q = Directory::Queue->new(path => 'tex-queue', schema => { tex => 'string' });
+my $O = Directory::Queue->new(path => 'queue', schema => { path => 'string'});
 
 while (1) {
     my $m = $Q->next || $Q->first;
@@ -30,7 +31,8 @@ while (1) {
     close $fh;
 
     # Now to call latex etc.
-    my $cmd = "TEXINPUTS=$ENV{TEXINPUTS} pdflatex -interaction=batchmode -output-directory=out $file";
+    my $cmd = "TEXINPUTS=$ENV{TEXINPUTS} pdflatex -interaction=batchmode"
+        . " -output-directory=out $file";
     warn "running: $cmd";
     my $tex_out = `$cmd`;
     my $base = basename($file, qw(.tex));
@@ -43,7 +45,6 @@ while (1) {
     my @trash = ("out/$base.tex", "out/$base.log", "out/$base.aux");
     unlink @trash or warn "Error cleaning up @trash: $!";
 
-    move("out/$base.pdf", "queue/");
-
+    $O->add(path => "out/$base.pdf");
 }
 
