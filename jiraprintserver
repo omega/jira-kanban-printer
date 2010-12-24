@@ -2,8 +2,11 @@
 
 use Mojolicious::Lite;
 
+use Config::JFDI;
+my $cfg = Config::JFDI->new(name => 'config')->get;
+
 use Directory::Queue;
-my $Q = Directory::Queue->new(path => 'tex-queue', schema => { tex => 'string' });
+my $Q = Directory::Queue->new(%{ $cfg->{texqueue} });
 
 sub startup {
     my $self = shift;

@@ -2,16 +2,20 @@
 
 use strict;
 use warnings;
+use Config::JFDI;
+my $cfg = Config::JFDI->new(name => 'config')->get;
 use Directory::Queue;
 
 use File::Temp qw(tempfile);
 use File::Basename;
 use File::Copy;
 
-$ENV{TEXINPUTS} = ".:tex/:/usr/local/texlive/2010basic/:";
+$ENV{TEXINPUTS} = $cfg->{texinputs};
 
-my $Q = Directory::Queue->new(path => 'tex-queue', schema => { tex => 'string' });
-my $O = Directory::Queue->new(path => 'queue', schema => { path => 'string'});
+warn "inputs: " . $cfg->{texinputs};
+
+my $Q = Directory::Queue->new(%{ $cfg->{texqueue} });
+my $O = Directory::Queue->new(%{ $cfg->{printqueue} });
 
 while (1) {
     my $m = $Q->next || $Q->first;

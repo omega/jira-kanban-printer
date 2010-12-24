@@ -1,0 +1,16 @@
+---
+texinputs: ".:tex/:/usr/local/texlive/2010basic/:"
+printer:
+    opts:
+        landscape: 'on'
+        sides: 'two-sided-short-edge'
+        fit-to-page: 'on'
+texqueue:
+    path: 'tex-queue'
+    schema:
+        tex: 'string'
+printqueue:
+    path: 'queue'
+    schema:
+        path: 'string'
+

@@ -3,17 +3,20 @@
 use strict;
 use warnings;
 
+use Config::JFDI;
+my $cfg = Config::JFDI->new(name => 'config')->get;
+
 use Directory::Queue;
 
 use Net::CUPS;
 use Net::CUPS::Destination;
 
 my $dest = Net::CUPS->new()->getDestination();
-$dest->addOption('landscape', 'on');
-$dest->addOption('sides', 'two-sided-short-edge');
-$dest->addOption('fit-to-page', 'on');
+foreach my $k (keys %{ $cfg->{printer}->{opts} }) {
+    $dest->addOption($k => $cfg->{printer}->{opts}->{$k});
+}
 
-my $O = Directory::Queue->new(path => 'queue', schema => { path => 'string'});
+my $O = Directory::Queue->new(%{ $cfg->{printqueue} });
 
 while (1) {
     my $e = $O->next || $O->first;
