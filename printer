@@ -29,7 +29,6 @@ while (1) {
     $O->remove($e);
 
     # Print it
-    # XXX: This should be async ideally, since we are in an event loop
     warn "  -- >> Printing $e{path}";
     $dest->printFile($e{path}, "Printing file from queue");
 
