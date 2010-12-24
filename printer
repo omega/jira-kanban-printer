@@ -24,11 +24,13 @@ while (1) {
         sleep 1;
         next;
     }
+    next unless $O->lock($e);
     my %e = $O->get($e);
+    $O->remove($e);
 
     # Print it
     # XXX: This should be async ideally, since we are in an event loop
-    warn "  -- >> Printing";
+    warn "  -- >> Printing $e{path}";
     $dest->printFile($e{path}, "Printing file from queue");
 
     # remove it!
