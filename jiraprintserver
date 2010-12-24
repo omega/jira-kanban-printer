@@ -26,7 +26,7 @@ get '/print' => sub {
     my $tex = $self->render_partial('print', format => 'tex');
 
     $self->app->log->debug("tex: " . $tex);
-    $Q->add(tex=> "$tex") or $self->app->log->error("Could not comunicate to 0MQ socket");
+    $Q->add(tex=> "$tex") or $self->app->log->error("Could not add TEX to PDFer queue");
     $self->render(text => 'ISSUE PRINTED (' . $issue . ")\n");
 };
 app->start;
