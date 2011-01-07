@@ -1,0 +1,152 @@
+% This is an example of how to create a presentation in PDFLaTeX. 
+% Matt Welsh, mdw@cs.berkeley.edu
+% See http://www.cs.berkeley.edu/~mdw/proj/texslides for details.
+
+% The basic document style is 'foils' from the FoilTeX package
+\documentclass[20pt,landscape]{foils}
+% These are my macros for creating slides
+\usepackage{mdwslides}
+
+% Basic things that we need are below
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\hypersetup{
+  pdfmenubar=true,
+  pdftoolbar=true,
+  pdfpagemode={None}
+}
+\usepackage{pause}
+\usepackage{graphicx}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set headers
+\MyLogo{Matt Welsh, UC Berkeley}
+\rightfooter{\quad\textsf{\thepage}}
+
+\begin{document}
+\rm
+
+\slide{}
+\LogoOff
+
+\vskip 1.5in
+\begin{center}
+{\color{mdwblue}\Large\slingbold How To Create Slides in PDFLaTeX}
+
+\vskip 11ex
+Matt Welsh 
+\vskip 1ex
+{\small\trebucit mdw@cs.berkeley.edu}
+\vskip 7ex
+{\mdwsmall\tt http://www.cs.berkeley.edu/\verb+~+mdw/proj/texslides/}
+
+\end{center}
+
+\slide{Introduction}
+\LogoOn
+
+\begin{list1}
+\item Making great looking presentations
+	\begin{list2}
+	\item Using only open source tools 
+		\begin{list3}
+		\item And it all works on Linux
+		\end{list3}
+	\item Good text, image, and display quality
+		\begin{list3}
+		\item Great colors, fonts, images
+		\item TrueType fonts a plus
+		\end{list3}
+	\end{list2}
+
+\item Displaying and publishing
+	\begin{list2}
+	\item Display ``live'' 
+	\item Print onto foils or paper
+	\item Publish on the Web
+	\end{list2}
+\end{list1}
+
+\slide{Some options}
+
+\begin{list1}
+\item StarOffice
+	\begin{list2}
+	\item Poor font support
+	\item Cumbersome GUI 
+	\item Must have StarOffice to display presentation
+		\begin{list3}
+		\item PowerPoint support not perfect
+		\end{list3}
+	\end{list2}
+
+\item MagicPoint
+	\begin{list2}
+	\item I have used this for a long time...
+	\item But a little too limited
+	\item Hard to add new features
+	\end{list2}
+\end{list1}
+
+\slide{The Solution: PDFLaTeX}
+
+\begin{list1}
+\item Version of LaTeX which produces PDF directly 
+	\begin{list2}
+	\item Advanced layout properties
+	\item Great graphics and figure support
+	\item Works with TrueType fonts
+	\end{list2}
+
+\item Why PDF?
+	\begin{list2}
+	\item Almost ubiquitous
+	\item Always looks the same
+	\item Acroread {\blueem full screen mode} for display
+	\end{list2}
+\end{list1}
+
+
+\slide{Math Formula Display} 
+
+\begin{list1}
+\item No sweat:
+
+\vskip 5ex
+\[
+  L_x = \prod_{i=1}^n \prod_{j=1}^m \frac{\xi \beta e^{-\mu t}}{\int_0^1 f(\alpha^x, \frac{\Gamma}{2})}
+\]
+\end{list1}
+
+\slide{Images}
+
+\begin{list1}
+\item Use standard LaTeX {\tt graphicx} package 
+	\begin{list2}
+	\item Import PDF, JPG, etc. 
+	\item Resizes automatically according to your display resolution
+	\end{list2}
+\end{list1}
+
+\begin{center}
+\colorbox{white}{\includegraphics[width=0.6\hsize]{./graph.pdf}}  
+
+{\blueem Web log from USGS Pasadena Field Office}
+\end{center}
+
+\slide{Other Features}
+
+\begin{list1}
+\item Hyperlinks: Within a document, or Web URLs
+
+\item Can insert {\tt pause} directives to wait between bullets
+
+\item Special effects to display between slides
+\begin{list2}
+\item None of these features demonstrated in this document
+\item See the documentation for FoilTeX and PDFSlides
+\end{list2}
+\end{list1}
+
+\end{document}

@@ -2,3 +2,6 @@ out/*
 !out/.gitignore
 queue/*
 !queue/.gitignore
+*.aux
+*.log
+*.pdf
