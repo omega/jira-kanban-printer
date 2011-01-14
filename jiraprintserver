@@ -23,6 +23,8 @@ get '/print' => sub {
     $self->app->log->debug("OMG!! wanna print $issue");
     $self->stash(key => $issue);
     $self->stash(summary => $self->param('summary') || '');
+    $self->stash(description => $self->param('description') || '');
+    $self->stash(reporter => $self->param('reporter') || '');
     my $tex = $self->render_partial('print', format => 'tex');
 
     $self->app->log->debug("tex: " . $tex);
@@ -49,6 +51,11 @@ We don't do much here, we print KANBAN cards for now!
 \usepackage{bookmark}
 \begin{document}
 \foilhead{<%= $key %>: <%= $summary %>}
-\foilhead{<%= $key %>: <%= $summary %>}
+\begin{itemize}
+\item <%= reporter %>
+\end{itemize}
+
+<%= description %>
+
 \end{document}
 

@@ -19,6 +19,8 @@ Issue issue  = issue
 log.error("Issue: " + issue.getKey());
 URL url = new URL("http://localhost:6230/print?issue=" + issue.getKey()
     + "&summary=" +  URLEncoder.encode(issue.getSummary(), "UTF-8")
+    + "&description=" +  URLEncoder.encode(issue.getDescription(), "UTF-8")
+    + "&reporter=" +  URLEncoder.encode(issue.getReporter().getFullName(), "UTF-8")
 );
 HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 httpCon.connect();

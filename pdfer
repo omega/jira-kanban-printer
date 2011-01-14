@@ -10,6 +10,7 @@ use File::Temp qw(tempfile);
 use File::Basename;
 use File::Copy;
 
+
 $ENV{TEXINPUTS} = $cfg->{texinputs};
 
 warn "inputs: " . $cfg->{texinputs};
@@ -49,6 +50,12 @@ while (1) {
     my @trash = ("out/$base.tex", "out/$base.log", "out/$base.aux");
     unlink @trash or warn "Error cleaning up @trash: $!";
 
-    $O->add(path => "out/$base.pdf");
+    # XXX: Need to get out page 1 and N / 2 + 1, and join them again, to make
+    # sure we cut out bad stuff
+
+    my $pdftk = `pdftk out/$base.pdf cat 1 1 output out/$base.ext.pdf`
+
+
+    $O->add(path => "out/$base.ext.pdf");
 }
 
