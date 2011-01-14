@@ -52,10 +52,10 @@ We don't do much here, we print KANBAN cards for now!
 \begin{document}
 \foilhead{<%= $key %>: <%= $summary %>}
 \begin{itemize}
-\item <%= reporter %>
+\item <%= $reporter %>
 \end{itemize}
 
-<%= description %>
+<%= $description %>
 
 \end{document}
 
